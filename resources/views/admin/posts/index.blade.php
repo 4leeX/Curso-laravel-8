@@ -1,24 +1,43 @@
-<h1>Posts</h1>
+@extends('admin.layouts.app')
 
-<hr>
-@if (session('success'))
-    <div>
-        {{ session('message') }}
-    </div>
-@endif
+@section('title', 'Listagem dos posts')
 
-@foreach ($posts as $post)
-    <p>
-        {{ $post->title }} 
-        [<a href="{{ route('posts.show', $post->id)}}">Ver</a> |
-        <a href="{{ route('posts.edit', $post->id)}}">Editar</a>]
-    </p>
-@endforeach
+@section('content')
 
-<hr>
+    <h1>Posts</h1>
 
-<a href="{{ route('posts.create') }}">Criar Novo Post</a>
+    <form action="{{ route("posts.search") }}" method="post">
+        @csrf
+        <input type="text" name="search" placeholder="Pesquisar">
+        <button type="submit">Pesquisar</button>
+    </form>
 
-<hr>
+    <hr>
+    @if (session('success'))
+        <div>
+            {{ session('message') }}
+        </div>
+    @endif
 
-{{ $posts->links() }}
+    @foreach ($posts as $post)
+        <p>
+            <img src="{{ url("storage/{$post->image}") }}" alt="{{ $post->title }}" style="max-width: 50px;">
+            {{ $post->title }} 
+            [<a href="{{ route('posts.show', $post->id)}}">Ver</a> |
+            <a href="{{ route('posts.edit', $post->id)}}">Editar</a>]
+        </p>
+    @endforeach
+
+    <hr>
+
+    <a href="{{ route('posts.create') }}">Criar Novo Post</a>
+
+    <hr>
+
+    @if (isset($filters))
+        {{ $posts->appends($filters)->links() }}
+    @else
+        {{ $posts->links() }}
+    @endif
+
+@endsection

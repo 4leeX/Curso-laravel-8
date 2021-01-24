@@ -1,24 +1,18 @@
+@extends('admin.layouts.app')
 
+@section('title', "Editar Post : {$post->title}")
 
-<h1>Editar o Post : <strong>{{ $post->title }}</strong></h1>
+@section('content')
+    
+    <h1>Editar o Post : <strong>{{ $post->title }}</strong></h1>
 
-@if ($errors->any())
-    <ul>
-        @foreach ($errors->all() as $error)
-            <li>{{ $error }}</li>
-        @endforeach
-    </ul>
-@endif
+    <form action="{{ route('posts.update', $post->id) }}" method="post" enctype="multipart/form-data">
+        @method('put')
+        @include('admin.posts._partials.form')
+    </form>
 
+    <hr>
 
-<form action="{{ route('posts.update', $post->id) }}" method="post">
-    @csrf
-    @method('put')
-    <input type="text" name="title" id="title" placeholder="Título" value="{{ $post->title }}">
-    <textarea name="content" id="content" cols="30" rows="5" placeholder="Conteúdo">{{ $post->content }}</textarea>
-    <button type="submit">Enviar</button>
-</form>
+    <a href="{{ route('posts.index') }}">Voltar</a>
 
-<hr>
-
-<a href="{{ route('posts.index') }}">Voltar</a>
+@endsection
