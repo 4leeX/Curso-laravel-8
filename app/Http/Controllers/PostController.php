@@ -82,7 +82,7 @@ class PostController extends Controller
 
         $data = $request->all();
 
-        if($request->image->isValid()){
+        if($request->image && $request->image->isValid()){
             if(Storage::exists($post->image))
                 Storage::delete($post->image);
             
@@ -104,7 +104,7 @@ class PostController extends Controller
 
         $filters = $request->except('_token');
 
-        $posts = Post::where('title', '=', "%{$request->search}%")
+        $posts = Post::where('title', 'LIKE', "%{$request->search}%")
                             ->orWhere('content', 'LIKE', "%{$request->search}%")
                             ->paginate();
         
